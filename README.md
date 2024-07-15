@@ -10,6 +10,7 @@ A basic demo of what you can expect this script to do:
 
 ![Sprited](https://github.com/user-attachments/assets/d283df28-e98f-4853-8a27-423b38e56d84)
 
+Try turning yourself into a sprite!
 The default color palette in the code is fantasy24 on Lospec
 
 
