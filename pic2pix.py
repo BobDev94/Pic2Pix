@@ -34,7 +34,7 @@ def convert(source_img_path,palette = ''):
         COLOR = 1.1 #Color Enhancement
         SHARP = 2 #Sharpness ENhancement
 
-        #Take 4 corner samples and analyze
+        #Take 4 corner samples and analyze. A single corner would most likely be sufficient, but shadows and shading makes this necessary
         sample = [
             np.array(img.crop((0, 0, SAMPLER, SAMPLER))),
             np.array(img.crop((w-SAMPLER, 0, w, SAMPLER))),
