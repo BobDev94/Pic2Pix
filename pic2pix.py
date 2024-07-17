@@ -185,8 +185,8 @@ def main():
     [85, 15, 10],
     [48, 15, 10]
 ]
-
-    convert("C:\Python\Python310\Programs\pic2pix\\pencil2.jpg",palette)
+    source = input('Enter source image path: ')
+    convert(source,palette)
 
     end = time.time()
     print(f'Time taken to pixellate: {end - start}')
