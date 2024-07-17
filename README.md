@@ -1,7 +1,7 @@
 # Pic2Pix
 A script to process pictures/drawings of people to turn them into sprites usable in 2d game engines like GameMaker
 
-A basic demo of what you can expect this script to do: 
+A basic demo of what you can expect this script to do: Please note that the script expects the part to be extracted to be in the middle of the image. It samples the edges to determine the range of pixels to be filtered out, so if the edge corners are covered by the parts to be extracted, you'll have issues. 
 
 ![Capture](https://github.com/user-attachments/assets/f42106d4-6e55-43ad-862d-7c9b2c042f8d)
 
@@ -10,7 +10,7 @@ A basic demo of what you can expect this script to do:
 
 ![Sprited](https://github.com/user-attachments/assets/d283df28-e98f-4853-8a27-423b38e56d84)
 
-The background doesnt have to be a perfect green screen. so long as it is distinct from the target, and is somewhat uniformly colored, it will be filtered out.
+The background doesnt have to be a perfect green screen. so long as it is distinct from the target, and is somewhat uniformly colored, it will be filtered out. The target shouldnt be similar in color to the background; if it is, you'll see parts of the target parts filtered out
 
 Try turning yourself into a sprite!
 
