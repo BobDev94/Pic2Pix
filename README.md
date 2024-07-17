@@ -16,7 +16,7 @@ Try turning yourself into a sprite!
 
 The default color palette in the code is fantasy24 on Lospec
 
-For pencil drawings and doodles, anything with just a single color, RENAME YOUR IMAGE SO IT HAS "PENCIL" in the name
+For pencil drawings and doodles, anything with just a single color, RENAME YOUR IMAGE SO IT HAS "pencil" in the name
 
 
 
