@@ -4,8 +4,15 @@ import time, math, sys
 
 
 
-#CONVERSION FUNCTION
 def convert(source_img_path,palette = ''):
+    '''
+    This is the main conversion function
+    
+    source_img_path: The location of the file to be converted
+    palette: An optional color palette to be applied to the function
+
+    returns: A filtered image
+    '''
     
     with Image.open(source_img_path) as img: #.open reads image from file
         w, h = img.size #loading pic width and height. 
@@ -126,8 +133,14 @@ def convert(source_img_path,palette = ''):
 
 
 
-#PALETTE FUNCTION
 def apply_palette(img,palette):
+    '''
+    This function applies a color palette, if one is provided. A default palette, fantasy24 is embedded in the code
+    img: A filtered image produced by the convert function
+    palette: An optional color palette to be applied to the image
+
+    returns: The image output from convert function with an applied color palette
+    '''
 
     np_img_array = np.array(img)
     np_copy_array = np.array(img)
