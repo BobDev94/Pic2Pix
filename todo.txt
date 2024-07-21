@@ -1,0 +1,3 @@
+1. Enter ability to process all pictures in a given folder path
+2. Write new parts to allow script to process a paper "spritesheet" to create sprites. This will be done by entering file along with row x column data, so the script will divide the picture into parts and process accordingly
+3. Give script ability to actually create animated gifs from multiple entries
