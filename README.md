@@ -30,3 +30,11 @@ For pencil drawings and doodles, anything with just a single color, rename your 
 
 Yes, I have the artistic ability of a drunk walrus. Hopefully, you're much better.
 
+
+
+![pencil_doodle_test](https://github.com/user-attachments/assets/12b30a75-5df4-45a3-9a43-a7dd46a00de9)
+
+                    |
+                    V
+
+![doodle_sprite_test](https://github.com/user-attachments/assets/54e31279-f008-4f2b-996f-c14a3b52617e)
