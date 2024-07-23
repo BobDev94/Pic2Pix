@@ -37,4 +37,5 @@ Yes, I have the artistic ability of a drunk walrus. Hopefully, you're much bette
                     |
                     V
 
-![doodle_sprite_test](https://github.com/user-attachments/assets/54e31279-f008-4f2b-996f-c14a3b52617e)
+
+![doodle_sprite_test](https://github.com/user-attachments/assets/00fa041e-83ea-480f-a147-b99669d33b4f)
