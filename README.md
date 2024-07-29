@@ -32,10 +32,12 @@ Yes, I have the artistic ability of a drunk walrus. Hopefully, you're much bette
 
 
 
-![pencil_doodle_test](https://github.com/user-attachments/assets/12b30a75-5df4-45a3-9a43-a7dd46a00de9)
+![zom_idle](https://github.com/user-attachments/assets/905ed294-1a87-406e-88a8-d329a1781305)
+
 
                     |
                     V
 
 
-![doodle_sprite_test](https://github.com/user-attachments/assets/80ff06c6-5d57-4336-b6cd-ccdb598b4b1f)
+
+![c2pixzom_idle](https://github.com/user-attachments/assets/7fdc947f-f968-43aa-ae2f-0b85fa891124)
