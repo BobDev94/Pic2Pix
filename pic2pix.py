@@ -14,18 +14,18 @@ def convert(source_img_path,palette = ''):
     returns: A filtered image
     '''
     
-    with Image.open(source_img_path) as img: #.open reads image from file
-        w, h = img.size #loading pic width and height. 
+    with Image.open(source_img_path) as img:
+        w, h = img.size 
 
-        if w > h: #Make the picture into a square, if width > height, this is mostly just for convenience
+        #TURN IMAGE INTO A SQUARE BY CROPPING OUT SIDES
+        if w > h:
             bdr = (w - h)//2
-            x1, y1, x2, y2 = bdr, 0, w - bdr, h
-            crp_img = img.crop((x1, y1, x2, y2))
-            crp_img.save('cropped.jpg')
+            crp_img = img.crop((bdr, 0, w - bdr, h))
             img = crp_img
             w = h
         
-        while w > 1000 or h > 1000: #reducing resolution massively reduces processing time. Higher resolutions can take upwards of minutes to process.
+        #REDUCE RESOLUTION
+        while w > 1000 or h > 1000: 
             w, h = w//2, h//2
             reduced_size = (w,h)
             img = img.resize(reduced_size)
@@ -41,7 +41,7 @@ def convert(source_img_path,palette = ''):
         COLOR = 1.1 #Color Enhancement
         SHARP = 2 #Sharpness ENhancement
 
-        #Take 4 corner samples and analyze. A single corner would most likely be sufficient, but shadows and shading makes this necessary
+        #SAMPLE 4 CORNERS OF THE IMAGE
         sample = [
             np.array(img.crop((0, 0, SAMPLER, SAMPLER))),
             np.array(img.crop((w-SAMPLER, 0, w, SAMPLER))),
@@ -49,18 +49,18 @@ def convert(source_img_path,palette = ''):
             np.array(img.crop((w-SAMPLER, h-SAMPLER, w, h)))
             ]
         comp = [np.mean(i, axis = (0,1)) for i in sample]
-        low = [np.maximum(i - TOLERANCE, 0) for i in comp]
+        low = [np.maximum(i - TOLERANCE, 0) for i in comp] #RGB must be 0 < r,g,b < 255
         high = [np.minimum(i + TOLERANCE, 255) for i in comp]
 
         for i in np_img: #for each row of pixels in the image
             for j in i: #for each element in a row
                 for i in range(4): #compare  w/4 sampled corner means
                     if (low[i][0] <= j[0] <= high[i][0]) and (low[i][1] <= j[1] <= high[i][1]) and (low[i][2] <= j[2] <= high[i][2]):
-                        j[3] = 0
+                        j[3] = 0 #Turn pixel transparent
                         break
-                    else:# PENCIL TEST
+                    else:
                         j[3] = 255
-                        if 'pencil' in source_img_path:
+                        if 'pencil' in source_img_path: # PENCIL TEST
                             j[0],j[1],j[2] = 0, 0, 0
                     
         trp_img = Image.fromarray(np_img)
@@ -71,7 +71,7 @@ def convert(source_img_path,palette = ''):
 
 
         #TIME TO PIXELLATE
-        rdc_img = trp_img.resize((88,88),Image.BILINEAR)
+        rdc_img = trp_img.resize((128,128),Image.BILINEAR)
         rsz_img = rdc_img.resize(trp_img.size, Image.NEAREST)
         rsz_img = np.array(rsz_img)
 
@@ -91,88 +91,62 @@ def convert(source_img_path,palette = ''):
         fin = shp_plus.enhance(SHARP)
 
         con_plus = ImageEnhance.Contrast(fin)
-        finished_product = con_plus.enhance(1.3)
+        finished_product = con_plus.enhance(1.1)
 
         finished_product.show()
 
     if palette: #Open palette sample image and store its values in an numpy array for later application
-        
-        if type(palette) == str:
-            #FIRST NEED TO EXTRACT PALETTE COLORS
-            with Image.open('palette.jpg') as pal:
-
-                np_pal = np.array(pal)
-                one_d_pal = np_pal.reshape(pal.size[0] * pal.size[1], 3)#2D array --> 1D array, 1st element is number elements in row, second is number of elements in each actual array
-
-                cluster = [[one_d_pal[0]]]
-                dist = 40
-                for i in one_d_pal: #for every pixel
-                    ip = 0
-                    for j in cluster: #for every cluster
-                        if i[0] - dist < j[0][0] <  i[0] + dist and i[1] - dist < j[0][1] < i[1] + dist and i[2] - dist < j[0][2] < i[2] + dist: # they belong in same cluster if 1
-                            j.append(i)
-                            ip = 1
-                            break 
-                    if not ip:
-                        cluster.append([i])
-
-                averaged_values = []
-                for x in cluster:
-                    single_list = np.array(x)
-                    avg = np.mean(single_list, axis = 0)
-                    averaged_values.append(np.round(avg))
-        
-        elif type(palette) == list:
-            averaged_values = palette
-            
-        apply_palette(fin, averaged_values)
+        apply_palette(fin, palette)
 
     cor_img.save('corrected_img.png')
     fin.save('walk5.png')
     pass
 
 
+import numpy as np
+from PIL import Image
 
-def apply_palette(img,palette):
+def apply_palette(img, palette):
     '''
-    This function applies a color palette, if one is provided. A default palette, fantasy24 is embedded in the code
+    This function applies a color palette, if one is provided. A default palette, fantasy24 is embedded in the code.
     img: A filtered image produced by the convert function
     palette: An optional color palette to be applied to the image
 
     returns: The image output from convert function with an applied color palette
     '''
-
+    
     np_img_array = np.array(img)
     np_copy_array = np.array(img)
     np_palette = np.array(palette)
 
-    row = np_img_array.shape[0]
-    col = np_img_array.shape[1]
+    alpha_mask = np_img_array[:, :, 3] != 0 #specifies a mask that checks all pixels and sets to False those pixels that have alpha channel == 0
 
-    for i in range(row):
-        for j in range(col):
-            dist_index = []
-            if np_img_array[i][j][3] != 0: #only calculate for opaque
-                for k in range(len(np_palette)):
-                    dist_index.append(math.dist(np_img_array[i][j][:3], np_palette[k]))
-                ind = dist_index.index(min(dist_index))
-
-                brr = np.append(palette[ind], 255)
-                np_copy_array[i][j] = brr
+    img_rgb = np_img_array[:, :, :3] #Cutting out the alpha channel from the pixels, changing shape from (w,h,4) tp (w,h,3)
     
+    img_rgb_opaque = img_rgb[alpha_mask] #we're onoly processing pixels with non zero alpha value. Note that this removes all the pixels with alpha == 0, and flattens the array into a 2D array from a 3D one
+
+    # Compute all pairwise distances between image RGB values and palette RGB values
+    img_rgb_opaque_modded = img_rgb_opaque[:, np.newaxis, :]  # Shape: (num_opaque_pixels, 1, 3). Here. np.newaxis is a special placeholder dimension to help in broadcasting vs palette array
+
+    palette_expanded = np_palette[np.newaxis, :, :]  # Shape: (1, len(palette), 3). Here too, we modify the palette array with the placeholder dimension.
+    #Why add newaxis to both? To ensure the only operations that matter take place and the other dimensions do not interact with each othrr
+
+    distances = np.sqrt(np.sum((img_rgb_opaque_modded - palette_expanded) ** 2, axis=-1))  # Shape: (num_opaque_pixels, len(palette)). Here, the 2nd dimension holds the actual distances.
+    
+    min_indices = np.argmin(distances, axis=-1)  # Shape: (num_opaque_pixels), min_indices stores the index of each palette color for each opaque pixel.
+    
+    # Map the closest palette colors to the image
+    np_copy_array[alpha_mask, :3] = np_palette[min_indices]  # Assign RGB values. The mask is applied and channels(rgb) specified, then, np_palette[min_indices] selectively replaces those rgb values with the palette colors
+    
+    # Convert back to an image
     recolored_img = Image.fromarray(np_copy_array)
     recolored_img.show()
     recolored_img.save('Sprited.png')
-
-    pass
 
 
 
 def main():
 
-    start = time.time()
-
-    palette = 'palette.jpg'
     palette = [
     [31, 36, 10],
     [57, 87, 28],
@@ -199,8 +173,9 @@ def main():
     [48, 15, 10]
 ]
     source = input('Enter source image path: ')
-    convert(source,palette)
 
+    start = time.time()
+    convert(source,palette)
     end = time.time()
     print(f'Time taken to pixellate: {end - start}')
 
