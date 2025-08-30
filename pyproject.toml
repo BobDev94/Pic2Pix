@@ -1,0 +1,25 @@
+[project]
+name = "Pic2Pix"
+version = "0.1.0"
+description = "Pic2Pix image processor"
+requires-python = ">=3.13"
+dependencies = [
+	"Pillow>=11.3.0",
+	"numpy>=2.3.2"
+]
+
+[project.optional-dependencies]
+dev = [
+	"pytest>=8.0.0"
+]
+
+# Creates the `pic2pix` command
+[project.scripts]
+pic2pix = "pic2pix:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["pic2pix"]
